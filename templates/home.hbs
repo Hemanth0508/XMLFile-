@@ -3,7 +3,7 @@
     <body>
         <p>Upload XML files</p>
 
-        <!-- Allow multiple file selection -->
+        
         <form id="xmlForm" action="/enter" method="post" enctype="multipart/form-data">
             <input type="file" id="xmlFile" name="xmlFiles" accept=".xml" multiple required>
             <input type="submit" value="Submit XML Files">
@@ -19,9 +19,9 @@
             const fileInput = document.getElementById('xmlFile');
 
             if (fileInput.files.length > 0) {
-                // Append each file to the FormData
+                
                 for (let i = 0; i < fileInput.files.length; i++) {
-                    formData.append('xmlFiles', fileInput.files[i]);  // 'xmlFiles' matches the backend
+                    formData.append('xmlFiles', fileInput.files[i]); 
                 }
 
                 fetch('/enter', {

@@ -1,0 +1,52 @@
+<students>
+    <student>
+        <name>Arjun Kumar</name>
+        <roll_no>STU001</roll_no>
+        <class>12</class>
+        <section>A</section>
+        <marks>85</marks>
+        <age>17</age>
+        <email>arjun.kumar@student.com</email>
+        <phone>9988776655</phone>
+    </student>
+    <student>
+        <name>Anjali Mehta</name>
+        <roll_no>STU002</roll_no>
+        <class>11</class>
+        <section>B</section>
+        <marks>90</marks>
+        <age>16</age>
+        <email>anjali.mehta@student.com</email>
+        <phone>9876543211</phone>
+    </student>
+    <student>
+        <name>Rohit Sharma</name>
+        <roll_no>STU003</roll_no>
+        <class>10</class>
+        <section>A</section>
+        <marks>88</marks>
+        <age>15</age>
+        <email>rohit.sharma@student.com</email>
+        <phone>9123456782</phone>
+    </student>
+    <student>
+        <name>Neha Singh</name>
+        <roll_no>STU004</roll_no>
+        <class>12</class>
+        <section>C</section>
+        <marks>92</marks>
+        <age>17</age>
+        <email>neha.singh@student.com</email>
+        <phone>9345678912</phone>
+    </student>
+    <student>
+        <name>Aman Gupta</name>
+        <roll_no>STU005</roll_no>
+        <class>11</class>
+        <section>B</section>
+        <marks>87</marks>
+        <age>16</age>
+        <email>aman.gupta@student.com</email>
+        <phone>9234567890</phone>
+    </student>
+</students>

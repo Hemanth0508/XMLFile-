@@ -1,0 +1,52 @@
+<employees>
+    <employee>
+        <name>Amit Sharma</name>
+        <id>EMP001</id>
+        <designation>Software Engineer</designation>
+        <department>IT</department>
+        <salary>70000</salary>
+        <email>amit.sharma@company.com</email>
+        <phone>9123456780</phone>
+        <location>Mumbai</location>
+    </employee>
+    <employee>
+        <name>Priya Verma</name>
+        <id>EMP002</id>
+        <designation>HR Manager</designation>
+        <department>HR</department>
+        <salary>60000</salary>
+        <email>priya.verma@company.com</email>
+        <phone>9876543210</phone>
+        <location>Delhi</location>
+    </employee>
+    <employee>
+        <name>Rahul Patel</name>
+        <id>EMP003</id>
+        <designation>Marketing Lead</designation>
+        <department>Marketing</department>
+        <salary>80000</salary>
+        <email>rahul.patel@company.com</email>
+        <phone>9345678901</phone>
+        <location>Bangalore</location>
+    </employee>
+    <employee>
+        <name>Sneha Nair</name>
+        <id>EMP004</id>
+        <designation>Finance Executive</designation>
+        <department>Finance</department>
+        <salary>75000</salary>
+        <email>sneha.nair@company.com</email>
+        <phone>9456781234</phone>
+        <location>Hyderabad</location>
+    </employee>
+    <employee>
+        <name>Vikram Singh</name>
+        <id>EMP005</id>
+        <designation>Project Manager</designation>
+        <department>Operations</department>
+        <salary>90000</salary>
+        <email>vikram.singh@company.com</email>
+        <phone>9678123456</phone>
+        <location>Chennai</location>
+    </employee>
+</employees>

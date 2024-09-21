@@ -11,7 +11,7 @@ const templatePath = path.join(__dirname, '../templates');
 // MongoDB connection
 mongoose.connect("mongodb://localhost:27017/nun", {
  //   useNewUrlParser: true,
-  //  useUnifiedTopology: true
+ //   useUnifiedTopology: true
 })
     .then(() => {
         console.log("MongoDB connected");
@@ -24,7 +24,7 @@ mongoose.connect("mongodb://localhost:27017/nun", {
 const xmlSchema = new mongoose.Schema({}, { strict: false }); // No predefined schema
 const XmlCollection = mongoose.model('XmlCollection', xmlSchema);
 
-// Setting up Multer for file uploads (storing in memory)
+// Setting up Multer for multiple file uploads (storing in memory)
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -41,32 +41,34 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-// POST route to handle XML upload and storage
-app.post("/enter", upload.single('xmlFile'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+// POST route to handle multiple XML file uploads and storage
+app.post("/enter", upload.array('xmlFiles', 10), async (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No files uploaded.');
     }
 
-    // Parse the XML file content
-    xml2js.parseString(req.file.buffer.toString(), async (err, result) => {
-        if (err) {
-            console.error('Error parsing XML:', err);
-            return res.status(400).send('Invalid XML format');
-        }
+    try {
+        for (const file of req.files) {
+            // Parse the XML file content
+            xml2js.parseString(file.buffer.toString(), async (err, result) => {
+                if (err) {
+                    console.error('Error parsing XML:', err);
+                    return res.status(400).send('Invalid XML format');
+                }
 
-        // Log parsed XML
-        console.log('Parsed XML:', JSON.stringify(result, null, 2));
+                // Log parsed XML
+                console.log('Parsed XML:', JSON.stringify(result, null, 2));
 
-        // Try saving parsed data to MongoDB
-        try {
-            const xmlDocument = new XmlCollection(result); // Save entire XML structure
-            await xmlDocument.save();
-            res.send('XML data successfully saved to the database');
-        } catch (error) {
-            console.error('Error inserting data into the database:', error);
-            res.status(500).send('An error occurred while saving to the database');
+                // Try saving parsed data to MongoDB
+                const xmlDocument = new XmlCollection(result); // Save entire XML structure
+                await xmlDocument.save();
+            });
         }
-    });
+        res.send('All XML files successfully saved to the database');
+    } catch (error) {
+        console.error('Error inserting data into the database:', error);
+        res.status(500).send('An error occurred while saving to the database');
+    }
 });
 
 // Start the server

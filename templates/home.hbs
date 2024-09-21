@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <p>Upload any XML file</p>
+        <p>Upload XML files</p>
 
+        <!-- Allow multiple file selection -->
         <form id="xmlForm" action="/enter" method="post" enctype="multipart/form-data">
-            <input type="file" id="xmlFile" name="xmlFile" accept=".xml" required>
-            <input type="submit" value="Submit XML">
+            <input type="file" id="xmlFile" name="xmlFiles" accept=".xml" multiple required>
+            <input type="submit" value="Submit XML Files">
         </form>
     </body>
 
@@ -18,7 +19,10 @@
             const fileInput = document.getElementById('xmlFile');
 
             if (fileInput.files.length > 0) {
-                formData.append('xmlFile', fileInput.files[0]);
+                // Append each file to the FormData
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append('xmlFiles', fileInput.files[i]);  // 'xmlFiles' matches the backend
+                }
 
                 fetch('/enter', {
                     method: 'POST',
@@ -27,11 +31,11 @@
                 .then(response => response.text()) 
                 .then(result => {
                     console.log('Success:', result);
-                    alert('XML file submitted successfully');
+                    alert('XML files submitted successfully');
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to submit XML file');
+                    alert('Failed to submit XML files');
                 });
             }
         });

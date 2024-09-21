@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-// Flatten nested arrays in the XML data
+
 const flattenArray = (obj) => {
     Object.keys(obj).forEach((key) => {
         if (Array.isArray(obj[key]) && obj[key].length === 1) {
@@ -40,7 +40,7 @@ const flattenArray = (obj) => {
     });
 };
 
-// Parse XML using a promise-based approach
+
 const parseXML = (xmlData) => {
     return new Promise((resolve, reject) => {
         xml2js.parseString(xmlData, (err, result) => {
@@ -65,17 +65,17 @@ app.post("/enter", upload.array('xmlFiles', 10), async (req, res) => {
             try {
                 const parsedXML = await parseXML(file.buffer.toString());
 
-                const fileName = file.originalname.replace(/\.[^/.]+$/, ""); // Remove file extension
+                const fileName = file.originalname.replace(/\.[^/.]+$/, "");
 
-                // Create dynamic model for MongoDB collection
+                
                 let DynamicModel;
                 try {
-                    DynamicModel = mongoose.model(fileName); // Try using existing model
+                    DynamicModel = mongoose.model(fileName);
                 } catch (e) {
                     DynamicModel = mongoose.model(fileName, new mongoose.Schema({}, { strict: false }));
                 }
 
-                // Extract array elements from XML
+                
                 let arrayElements = null;
                 Object.keys(parsedXML).forEach((key) => {
                     if (Array.isArray(parsedXML[key])) {
@@ -95,11 +95,11 @@ app.post("/enter", upload.array('xmlFiles', 10), async (req, res) => {
                     continue;
                 }
 
-                // Save each record to MongoDB
+                
                 for (const element of arrayElements) {
-                    flattenArray(element); // Flatten nested arrays
+                    flattenArray(element); 
                     const document = new DynamicModel(element);
-                    await document.save(); // Save document to MongoDB
+                    await document.save(); 
                 }
 
                 console.log(`Records from ${fileName} appended successfully.`);

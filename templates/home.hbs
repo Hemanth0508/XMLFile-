@@ -107,7 +107,7 @@
             font-size: 1rem;
         }
 
-        /* Scrollbar Styling for File List */
+        
         .file-list::-webkit-scrollbar {
             width: 8px;
         }
@@ -143,7 +143,7 @@
     </div>
 
     <script>
-        // Array to hold selected files
+      
         let selectedFiles = [];
 
         const fileInput = document.getElementById('xmlFile');
@@ -151,9 +151,9 @@
         const xmlForm = document.getElementById('xmlForm');
         const messageDiv = document.getElementById('message');
 
-        // Function to render the list of selected files
+       
         function renderFileList() {
-            fileList.innerHTML = ''; // Clear current list
+            fileList.innerHTML = ''; 
 
             selectedFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
@@ -176,26 +176,26 @@
             });
         }
 
-        // Function to remove a file from the selectedFiles array
+       
         function removeFile(index) {
             selectedFiles.splice(index, 1);
             renderFileList();
         }
 
-        // Event listener for file input change
+       
         fileInput.addEventListener('change', (event) => {
             const files = Array.from(event.target.files);
-            // Add new files to selectedFiles, avoiding duplicates
+        
             files.forEach(file => {
                 if (!selectedFiles.some(f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)) {
                     selectedFiles.push(file);
                 }
             });
             renderFileList();
-            fileInput.value = ''; // Reset file input
+            fileInput.value = ''; 
         });
 
-        // Event listener for form submission
+        
         xmlForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -218,11 +218,11 @@
             .then(response => response.text()) 
             .then(result => {
                 console.log('Success:', result);
-                // Prepare the list of file names
+               
                 const fileNames = selectedFiles.map(file => file.name).join(', ');
-                // Show alert with number and names of files
+               
                 alert(`Successfully submitted ${selectedFiles.length} file(s):\n${fileNames}`);
-                // Reset the form and selectedFiles
+               
                 selectedFiles = [];
                 renderFileList();
                 messageDiv.textContent = 'XML files submitted successfully!';

@@ -20,10 +20,6 @@ mongoose.connect("mongodb://localhost:27017/nun", {
         console.log("Failed to connect to MongoDB", err);
     });
 
-// Schema for dynamic data insertion
-const xmlSchema = new mongoose.Schema({}, { strict: false }); // No predefined schema
-const XmlCollection = mongoose.model('XmlCollection', xmlSchema);
-
 // Setting up Multer for multiple file uploads (storing in memory)
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -41,7 +37,18 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-// POST route to handle multiple XML file uploads and storage
+// Helper function to flatten arrays with single values
+const flattenArray = (obj) => {
+    Object.keys(obj).forEach((key) => {
+        if (Array.isArray(obj[key]) && obj[key].length === 1) {
+            obj[key] = obj[key][0]; // Flatten single-value arrays
+        } else if (typeof obj[key] === 'object') {
+            flattenArray(obj[key]); // Recursively flatten nested objects
+        }
+    });
+};
+
+// Route to handle XML file upload and append to the collection if it exists
 app.post("/enter", upload.array('xmlFiles', 10), async (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).send('No files uploaded.');
@@ -56,18 +63,50 @@ app.post("/enter", upload.array('xmlFiles', 10), async (req, res) => {
                     return res.status(400).send('Invalid XML format');
                 }
 
-                // Log parsed XML
-                console.log('Parsed XML:', JSON.stringify(result, null, 2));
+                // Extract file name (without extension) for collection name
+                const fileName = file.originalname.replace(/\.[^/.]+$/, ""); // Removes the extension
 
-                // Try saving parsed data to MongoDB
-                const xmlDocument = new XmlCollection(result); // Save entire XML structure
-                await xmlDocument.save();
+                // Dynamically check if the model (collection) already exists
+                let DynamicModel;
+                try {
+                    DynamicModel = mongoose.model(fileName); // Get the model if it exists
+                } catch (e) {
+                    // If the model does not exist, create it
+                    DynamicModel = mongoose.model(fileName, new mongoose.Schema({}, { strict: false }));
+                }
+
+                // Find the first array-like element in the XML structure
+                let arrayElements = null;
+                Object.keys(result).forEach((key) => {
+                    if (Array.isArray(result[key])) {
+                        arrayElements = result[key]; // If the key points to an array
+                    } else if (typeof result[key] === 'object') {
+                        Object.keys(result[key]).forEach((nestedKey) => {
+                            if (Array.isArray(result[key][nestedKey])) {
+                                arrayElements = result[key][nestedKey]; // Nested array found
+                            }
+                        });
+                    }
+                });
+
+                if (!arrayElements) {
+                    return res.status(400).send('No valid array element found in the XML.');
+                }
+
+                // Iterate through each element, flatten its properties before saving, and append to the collection
+                for (const element of arrayElements) {
+                    flattenArray(element); // Flatten single-value arrays
+                    const document = new DynamicModel(element);
+                    await document.save(); // Save the document (append new data)
+                }
+
+                console.log(`Records from ${fileName} appended successfully.`);
             });
         }
-        res.send('All XML files successfully saved to the database');
+        res.send('All XML files and records successfully appended to the database.');
     } catch (error) {
         console.error('Error inserting data into the database:', error);
-        res.status(500).send('An error occurred while saving to the database');
+        res.status(500).send('An error occurred while saving to the database.');
     }
 });
 

@@ -120,6 +120,7 @@ app.post("/enter", upload.array('xmlFiles', 10), async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+const port = process.env.PORT;
+app.listen(port, () => {
+    console.log(`Server running ${port}`);
 });

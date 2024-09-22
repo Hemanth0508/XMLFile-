@@ -4,11 +4,14 @@ const hbs = require("hbs");
 const xml2js = require('xml2js');
 const multer = require('multer');
 const mongoose = require("mongoose");
+require('dotenv').config();
+
 
 const app = express();
 const templatePath = path.join(__dirname, '../templates');
 
-mongoose.connect("mongodb://localhost:27017/nun", {})
+const mongoUri = process.env.MONGODB_URI;
+mongoose.connect(mongoUri, {})
     .then(() => {
         console.log("MongoDB connected");
     })
